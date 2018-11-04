@@ -63,7 +63,20 @@ function MqttDimmerAccessory(log, config) {
 try {
   var data = JSON.parse(message);
   var status = data.Dimmer;  
+  if (data.POWER == 'OFF')
+  {
+    status = 0;
+  }
 
+  if (self.isInt(status))
+  {
+      self.log("Brightness from JSON "+status);
+  }
+  else
+  {
+      var status = message.toString();
+      self.log("Brightness from MSG "+status);
+  }
 } catch (e) {
             var status = message.toString();
 }
