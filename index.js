@@ -60,13 +60,20 @@ function MqttDimmerAccessory(log, config) {
 
     this.client.on('message', function (topic, message) {
         if (topic == self.topics.statusGet) {
+try {
+  var data = JSON.parse(message);
+  var status = data.Dimmer;  
+
+} catch (e) {
             var status = message.toString();
+}
             if (self.isInt(status)) {
                 status = parseInt(status);
                 self.on = status > 0;
                 if (status > 0) {
                     self.brightness = status;
                 }
+
                 self.service.getCharacteristic(Characteristic.On).setValue(self.on, undefined, 'fromSetValue');
                 self.service.getCharacteristic(Characteristic.Brightness).setValue(self.brightness, undefined, 'fromSetValue');
             }
